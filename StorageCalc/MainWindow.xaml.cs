@@ -19,7 +19,7 @@ namespace StorageCalc
             try
             {
                 var diskCount = Convert.ToInt32(this.TxtDiskCount.Text);
-                var diskSpace = Convert.ToInt32(this.TxtDiskSpace.Text);
+                var diskSpace = Convert.ToDouble(this.TxtDiskSpace.Text);
 
                 var diskspaceInBytes = diskSpace * 1000000000000L;
                 var divisor = 1024L * 1024L * 1024L * 1024L;
