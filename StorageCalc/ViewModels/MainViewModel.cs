@@ -1,6 +1,9 @@
-﻿using StorageCalc.Resources;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using StorageCalc.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +11,7 @@ using System.Windows;
 
 namespace StorageCalc.ViewModels
 {
-    public class MainViewModel
+    public partial class MainViewModel : ObservableObject
     {
         private readonly IMessageBoxHelper _messageBox;
 
@@ -17,96 +20,102 @@ namespace StorageCalc.ViewModels
             _messageBox = messageBox;
         }
 
-        public (string txtTotalSize, string txtFaultTolerance) Calculate(
-            string txtDiskCount, string txtDiskSpace,
-            bool? raid0, bool? raid1, bool? raid5, bool? raid6, bool? raid10)
+        [ObservableProperty] int _diskCount;
+        [ObservableProperty] double _diskSpace;
+        [ObservableProperty] bool _raid0;
+        [ObservableProperty] bool _raid1;
+        [ObservableProperty] bool _raid5;
+        [ObservableProperty] bool _raid6;
+        [ObservableProperty] bool _raid10;
+        [ObservableProperty] string _totalSpaceText = string.Empty;
+        [ObservableProperty] string _faultToleranceText = string.Empty;
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            try
+            base.OnPropertyChanged(e);
+            CalculateCommand.NotifyCanExecuteChanged();
+        }
+
+        private bool CanCalculate()
+        {
+            return DiskCount > 0 && DiskSpace > 0
+                && (Raid0 || Raid1 || Raid5 || Raid6 || Raid10);
+        }
+
+        [ICommand(CanExecute = nameof(CanCalculate))]
+        private void Calculate()
+        {
+            double diskspaceInBytes = DiskSpace * 1000000000000L;
+            var divisor = 1024L * 1024L * 1024L * 1024L;
+            var realDiskSpace = (double)diskspaceInBytes / (double)divisor;
+
+            var usableSpace = 0.0d;
+            var faultTolerance = string.Empty;
+
+            if (Raid0)
             {
-                var diskCount = Convert.ToInt32(txtDiskCount);
-                var diskSpace = Convert.ToDouble(txtDiskSpace);
-
-                var diskspaceInBytes = diskSpace * 1000000000000L;
-                var divisor = 1024L * 1024L * 1024L * 1024L;
-                var realDiskSpace = (double)diskspaceInBytes / (double)divisor;
-
-                var usableSpace = 0.0d;
-                var faultTolerance = string.Empty;
-
-                if (raid0 == true)
-                {
-                    usableSpace = diskCount * realDiskSpace;
-                    faultTolerance = LocalizedStrings.Instance["None"];
-                }
-
-                if (raid1 == true)
-                {
-                    if (diskCount == 2)
-                    {
-                        usableSpace = realDiskSpace;
-                        faultTolerance = LocalizedStrings.Instance["OneDisk"];
-                    }
-                    else
-                    {
-                        _messageBox.Show(LocalizedStrings.Instance["ExactlyTwoPlatesAreRequired"]);
-                        return default;
-                    }
-                }
-
-                if (raid5 == true)
-                {
-                    if (diskCount >= 3)
-                    {
-                        usableSpace = (diskCount - 1) * realDiskSpace;
-                        faultTolerance = LocalizedStrings.Instance["OneDisk"];
-                    }
-                    else
-                    {
-                        _messageBox.Show(LocalizedStrings.Instance["AtLeastThreePlatesRequired"]);
-                        return default;
-                    }
-                }
-
-                if (raid6 == true)
-                {
-                    if (diskCount >= 4)
-                    {
-                        usableSpace = (diskCount - 2) * realDiskSpace;
-                        faultTolerance = LocalizedStrings.Instance["TwoDisks"];
-                    }
-                    else
-                    {
-                        _messageBox.Show(LocalizedStrings.Instance["AtLeastFourPlatesRequired"]);
-                        return default;
-                    }
-                }
-
-                if (raid10 == true)
-                {
-                    if (diskCount % 2 == 0 && diskCount >= 4)
-                    {
-                        usableSpace = (diskCount - 2) * realDiskSpace;
-                        faultTolerance = LocalizedStrings.Instance["MinOneDisk"];
-                    }
-                    else
-                    {
-                        _messageBox.Show(LocalizedStrings.Instance["AtLeastFourPlatesAndEvenNumber"]);
-                        return default;
-                    }
-                }
-
-                return (Math.Round(usableSpace, 2) + " TB", faultTolerance);
+                usableSpace = DiskCount * realDiskSpace;
+                faultTolerance = LocalizedStrings.Instance["None"];
             }
-            catch (FormatException)
+
+            if (Raid1)
             {
-                _messageBox.Show(LocalizedStrings.Instance["PleaseOnlyEnterNumber"]);
-                return default;
+                if (DiskCount == 2)
+                {
+                    usableSpace = realDiskSpace;
+                    faultTolerance = LocalizedStrings.Instance["OneDisk"];
+                }
+                else
+                {
+                    _messageBox.Show(LocalizedStrings.Instance["ExactlyTwoPlatesAreRequired"]);
+                    return;
+                }
             }
-            catch (OverflowException)
+
+            if (Raid5)
             {
-                _messageBox.Show(LocalizedStrings.Instance["PleaseEnterSmallerNumbers"]);
-                return default;
+                if (DiskCount >= 3)
+                {
+                    usableSpace = (DiskCount - 1) * realDiskSpace;
+                    faultTolerance = LocalizedStrings.Instance["OneDisk"];
+                }
+                else
+                {
+                    _messageBox.Show(LocalizedStrings.Instance["AtLeastThreePlatesRequired"]);
+                    return;
+                }
             }
+
+            if (Raid6)
+            {
+                if (DiskCount >= 4)
+                {
+                    usableSpace = (DiskCount - 2) * realDiskSpace;
+                    faultTolerance = LocalizedStrings.Instance["TwoDisks"];
+                }
+                else
+                {
+                    _messageBox.Show(LocalizedStrings.Instance["AtLeastFourPlatesRequired"]);
+                    return;
+                }
+            }
+
+            if (Raid10)
+            {
+                if (DiskCount % 2 == 0 && DiskCount >= 4)
+                {
+                    usableSpace = (DiskCount - 2) * realDiskSpace;
+                    faultTolerance = LocalizedStrings.Instance["MinOneDisk"];
+                }
+                else
+                {
+                    _messageBox.Show(LocalizedStrings.Instance["AtLeastFourPlatesAndEvenNumber"]);
+                    return;
+                }
+            }
+
+            TotalSpaceText = Math.Round(usableSpace, 2) + " TB";
+            FaultToleranceText = faultTolerance;
         }
     }
 }
