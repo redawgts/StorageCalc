@@ -9,6 +9,13 @@ namespace StorageCalc.ViewModels
 {
     public class MainViewModel
     {
+        private readonly IMessageBoxHelper _messageBox;
+
+        public MainViewModel(IMessageBoxHelper messageBox)
+        {
+            _messageBox = messageBox;
+        }
+
         public (string txtTotalSize, string txtFaultTolerance) Calculate(
             string txtDiskCount, string txtDiskSpace,
             bool? raid0, bool? raid1, bool? raid5, bool? raid6, bool? raid10)
@@ -40,7 +47,7 @@ namespace StorageCalc.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Genau 2 Platten benötigt");
+                        _messageBox.Show("Genau 2 Platten benötigt");
                         return default;
                     }
                 }
@@ -54,7 +61,7 @@ namespace StorageCalc.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Min. 3 Platten notwendig");
+                        _messageBox.Show("Min. 3 Platten notwendig");
                         return default;
                     }
                 }
@@ -68,7 +75,7 @@ namespace StorageCalc.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Min. 4 Platten notwendig");
+                        _messageBox.Show("Min. 4 Platten notwendig");
                         return default;
                     }
                 }
@@ -82,7 +89,7 @@ namespace StorageCalc.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Min. 4 Platten und gerade Anzahl notwendig");
+                        _messageBox.Show("Min. 4 Platten und gerade Anzahl notwendig");
                         return default;
                     }
                 }
@@ -91,17 +98,12 @@ namespace StorageCalc.ViewModels
             }
             catch (FormatException)
             {
-                MessageBox.Show("Eingabe prüfen, bitte nur Zahlen eingeben");
+                _messageBox.Show("Eingabe prüfen, bitte nur Zahlen eingeben");
                 return default;
             }
             catch (OverflowException)
             {
-                MessageBox.Show("Overflow, bitte kleinere Zahlen eingeben");
-                return default;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Da ging was schief:\r\n\r\n" + ex);
+                _messageBox.Show("Overflow, bitte kleinere Zahlen eingeben");
                 return default;
             }
         }
