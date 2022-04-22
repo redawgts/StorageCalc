@@ -64,33 +64,39 @@
             Grid.Column="0"
             Margin="5"
             Text="RAID:" />
-        <WrapPanel Grid.Row="2" Grid.Column="1">
-            <RadioButton
-                Name="RbnRaid0"
-                Margin="2"
-                Content="RAID 0"
-                IsChecked="{Binding Raid0, Mode=TwoWay}" />
-            <RadioButton
-                Name="RbnRaid1"
-                Margin="2"
-                Content="RAID 1"
-                IsChecked="{Binding Raid1, Mode=TwoWay}" />
-            <RadioButton
-                Name="RbnRaid5"
-                Margin="2"
-                Content="RAID 5"
-                IsChecked="{Binding Raid5, Mode=TwoWay}" />
-            <RadioButton
-                Name="RbnRaid6"
-                Margin="2"
-                Content="RAID 6"
-                IsChecked="{Binding Raid6, Mode=TwoWay}" />
-            <RadioButton
-                Name="RbnRaid10"
-                Margin="2"
-                Content="RAID 10"
-                IsChecked="{Binding Raid10, Mode=TwoWay}" />
-        </WrapPanel>
+        <ListBox
+            x:Name="CalculatorsListBox"
+            Grid.Row="2"
+            Grid.Column="1"
+            BorderBrush="Transparent"
+            ItemsSource="{Binding Calculators}"
+            SelectedItem="{Binding SelectedCalculator, Mode=TwoWay}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsSelected" Value="{Binding Content.IsSelected, Mode=TwoWay, RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter Margin="5" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <RadioButton
+                        Content="{Binding Name}"
+                        GroupName="raid"
+                        IsChecked="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <Button
             Name="CalculateButton"
@@ -98,7 +104,6 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="5"
-            Click="BtnCalculate_OnClick"
             Command="{Binding CalculateCommand}"
             Content="{lex:Loc}" />
 
