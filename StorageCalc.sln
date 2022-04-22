@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageCalc", "StorageCalc\StorageCalc.csproj", "{E2AC985C-C2A5-4D53-A1E9-0F75D2C85C5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageCalc", "StorageCalc\StorageCalc.csproj", "{E2AC985C-C2A5-4D53-A1E9-0F75D2C85C5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageCalc.Tests", "StorageCalc.Tests\StorageCalc.Tests.csproj", "{B36110CC-E54C-4197-8BB3-A8A4019FD6EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{E2AC985C-C2A5-4D53-A1E9-0F75D2C85C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2AC985C-C2A5-4D53-A1E9-0F75D2C85C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2AC985C-C2A5-4D53-A1E9-0F75D2C85C5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B36110CC-E54C-4197-8BB3-A8A4019FD6EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B36110CC-E54C-4197-8BB3-A8A4019FD6EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B36110CC-E54C-4197-8BB3-A8A4019FD6EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B36110CC-E54C-4197-8BB3-A8A4019FD6EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4D2E0800-31F7-4538-BB62-3C9524C1DD42}
 	EndGlobalSection
 EndGlobal
