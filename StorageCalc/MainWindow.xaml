@@ -2,9 +2,13 @@
     x:Class="StorageCalc.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
     Title="Storage Calculator"
     Width="525"
     Height="280"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:ResxLocalizationProvider.DefaultAssembly="StorageCalc"
+    lex:ResxLocalizationProvider.DefaultDictionary="Strings"
     Icon="nas.ico"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen">
@@ -23,10 +27,11 @@
         </Grid.RowDefinitions>
 
         <TextBlock
+            Name="NumberOfPlatesTextBlock"
             Grid.Row="0"
             Grid.Column="0"
             Margin="5"
-            Text="Anzahl Platten:" />
+            Text="{lex:Loc}" />
         <TextBox
             Name="TxtDiskCount"
             Grid.Row="0"
@@ -36,10 +41,11 @@
             HorizontalAlignment="Left" />
 
         <TextBlock
+            Name="SizeOfDiskInTBTextBlock"
             Grid.Row="1"
             Grid.Column="0"
             Margin="5"
-            Text="Grösse einer Platte in TB:" />
+            Text="{lex:Loc}" />
         <TextBox
             Name="TxtDiskSpace"
             Grid.Row="1"
@@ -77,19 +83,21 @@
         </WrapPanel>
 
         <Button
+            Name="CalculateButton"
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="5"
             Click="BtnCalculate_OnClick"
-            Content="Berechnen" />
+            Content="{lex:Loc}" />
 
         <TextBlock
+            Name="UseableSpaceTextBlock"
             Grid.Row="4"
             Grid.Column="0"
             Margin="5"
             FontSize="20"
-            Text="Nutzbarer Platz:"
+            Text="{lex:Loc}"
             TextAlignment="Left" />
         <TextBlock
             Name="TxtTotalSize"
@@ -100,11 +108,12 @@
             TextAlignment="Center" />
 
         <TextBlock
+            Name="FaultToleranceTextBlock"
             Grid.Row="5"
             Grid.Column="0"
             Margin="5"
             FontSize="20"
-            Text="Fehlertoleranz:"
+            Text="{lex:Loc}"
             TextAlignment="Left" />
         <TextBlock
             Name="TxtFaultTolerance"

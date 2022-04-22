@@ -1,4 +1,5 @@
 using Moq;
+using StorageCalc.Resources;
 using StorageCalc.ViewModels;
 using Xunit;
 
@@ -14,20 +15,23 @@ public class MainViewModelTests
     {
         _messageBoxMock = new Mock<IMessageBoxHelper>();
         _messageBox = _messageBoxMock.Object;
+
         _sut = new MainViewModel(_messageBox);
     }
 
     [Theory]
-    [InlineData("2","4", true, null, null, null, null, "7.28 TB", "keine")]
-    [InlineData("2","1", null, true, null, null, null, "0.91 TB", "1 Platte")]
-    [InlineData("3","2", null, null, true, null, null, "3.64 TB", "1 Platte")]
-    [InlineData("4","1", null, null, null, true, null, "1.82 TB", "2 Platten")]
-    [InlineData("4","1", null, null, null, null, true, "1.82 TB", "Min. 1 Platte")]
+    [InlineData("2","4", true, null, null, null, null, "7.28 TB", "keine", "de-CH")]
+    [InlineData("2","4", true, null, null, null, null, "7.28 TB", "none", "en-US")]
+    [InlineData("2","1", null, true, null, null, null, "0.91 TB", "1 Platte", "de-CH")]
+    [InlineData("3","2", null, null, true, null, null, "3.64 TB", "1 Platte", "de-CH")]
+    [InlineData("4","1", null, null, null, true, null, "1.82 TB", "2 Platten", "de-CH")]
+    [InlineData("4","1", null, null, null, null, true, "1.82 TB", "Min. 1 Platte", "de-CH")]
     public void Calculate_ReturnsExpectedStrings_WhenGoodDataIsPassed(
         string txtDiskCount, string txtDiskSpace, bool? raid0,
         bool? raid1, bool? raid5, bool? raid6, bool? raid10,
-        string expectedTotalSize, string expectedFaultTolerance)
+        string expectedTotalSize, string expectedFaultTolerance, string cultureCode)
     {
+        LocalizedStrings.Instance.SetCulture(cultureCode);
         (string totalSpace, string faultTolerance) = _sut.Calculate(txtDiskCount, txtDiskSpace,
             raid0, raid1, raid5, raid6, raid10);
 

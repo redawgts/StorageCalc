@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StorageCalc.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,7 @@ namespace StorageCalc.ViewModels
                 if (raid0 == true)
                 {
                     usableSpace = diskCount * realDiskSpace;
-                    faultTolerance = "keine";
+                    faultTolerance = LocalizedStrings.Instance["None"];
                 }
 
                 if (raid1 == true)
@@ -43,11 +44,11 @@ namespace StorageCalc.ViewModels
                     if (diskCount == 2)
                     {
                         usableSpace = realDiskSpace;
-                        faultTolerance = "1 Platte";
+                        faultTolerance = LocalizedStrings.Instance["OneDisk"];
                     }
                     else
                     {
-                        _messageBox.Show("Genau 2 Platten benötigt");
+                        _messageBox.Show(LocalizedStrings.Instance["ExactlyTwoPlatesAreRequired"]);
                         return default;
                     }
                 }
@@ -57,11 +58,11 @@ namespace StorageCalc.ViewModels
                     if (diskCount >= 3)
                     {
                         usableSpace = (diskCount - 1) * realDiskSpace;
-                        faultTolerance = "1 Platte";
+                        faultTolerance = LocalizedStrings.Instance["OneDisk"];
                     }
                     else
                     {
-                        _messageBox.Show("Min. 3 Platten notwendig");
+                        _messageBox.Show(LocalizedStrings.Instance["AtLeastThreePlatesRequired"]);
                         return default;
                     }
                 }
@@ -71,11 +72,11 @@ namespace StorageCalc.ViewModels
                     if (diskCount >= 4)
                     {
                         usableSpace = (diskCount - 2) * realDiskSpace;
-                        faultTolerance = "2 Platten";
+                        faultTolerance = LocalizedStrings.Instance["TwoDisks"];
                     }
                     else
                     {
-                        _messageBox.Show("Min. 4 Platten notwendig");
+                        _messageBox.Show(LocalizedStrings.Instance["AtLeastFourPlatesRequired"]);
                         return default;
                     }
                 }
@@ -85,11 +86,11 @@ namespace StorageCalc.ViewModels
                     if (diskCount % 2 == 0 && diskCount >= 4)
                     {
                         usableSpace = (diskCount - 2) * realDiskSpace;
-                        faultTolerance = "Min. 1 Platte";
+                        faultTolerance = LocalizedStrings.Instance["MinOneDisk"];
                     }
                     else
                     {
-                        _messageBox.Show("Min. 4 Platten und gerade Anzahl notwendig");
+                        _messageBox.Show(LocalizedStrings.Instance["AtLeastFourPlatesAndEvenNumber"]);
                         return default;
                     }
                 }
@@ -98,12 +99,12 @@ namespace StorageCalc.ViewModels
             }
             catch (FormatException)
             {
-                _messageBox.Show("Eingabe prüfen, bitte nur Zahlen eingeben");
+                _messageBox.Show(LocalizedStrings.Instance["PleaseOnlyEnterNumber"]);
                 return default;
             }
             catch (OverflowException)
             {
-                _messageBox.Show("Overflow, bitte kleinere Zahlen eingeben");
+                _messageBox.Show(LocalizedStrings.Instance["PleaseEnterSmallerNumbers"]);
                 return default;
             }
         }
